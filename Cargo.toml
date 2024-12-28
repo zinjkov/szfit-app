@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+    "szfit-app-bin",
+    "services/telegram-bot",
+    "libs/szfit-domain",
+    "libs/szfit-db",
+    "libs/szfit-utils", "services/web", "libs/szfit-auth", "libs/szfit-macro"]

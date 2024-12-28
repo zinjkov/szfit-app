@@ -1,0 +1,24 @@
+[package]
+name = "telegram_bot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+#homebrew craft
+szfit-domain = { path = "../../libs/szfit-domain" }
+
+teloxide = { version = "0.12", features = ["macros", "trace-adaptor"] }
+
+#serde
+serde = { version = "1.0.203", features = ["derive"] }
+serde_json = { version = "1.0.117" }
+
+# basic stuff
+log = { version = "0.4.21" }
+tokio = { version = "1.38", features = ["rt-multi-thread", "macros"] }
+thiserror = "1.0.61"
+derive_more = { version = "1.0.0-beta", features = ["from", "display"] }
+
+#di
+dill = { version = "0.8.0" }
+async-trait = "0.1.80"

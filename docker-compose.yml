@@ -1,0 +1,26 @@
+services:
+  postgres-db:
+    container_name: szfit-postgres
+    image: postgres:16.4-bullseye
+    environment:
+      POSTGRES_DB: "szfit-postgres-test"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-test/:/var/lib/postgresql/data
+
+
+#  szfit-app:
+#    build:
+#      context: .
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      DATABASE_URL: "sqlite:/szfit.db"
+#      TELOXIDE_TOKEN: "5163089437:AAFNLNjMUPe3KtNZtOmkpIaIa23oAZjSbIo"
+#      SZFIT_LOG: "trace"
+#    volumes:
+#      - ./sqlite/szfit.db:/szfit.db
+

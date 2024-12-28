@@ -1,0 +1,21 @@
+[package]
+name = "szfit-auth"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+#homebrew craft
+szfit-domain = { path = "../../libs/szfit-domain" }
+szfit-utils = { path = "../../libs/szfit-utils" }
+
+async-trait = { version = "0.1.80" }
+
+sqlx = { version = "0.7", features = ["runtime-tokio", "tls-rustls", "sqlite", "sqlx-sqlite", "time", "chrono"] }
+jsonwebtoken = { version = "9.3.0" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
+# basic stuff
+log = { version = "0.4.21" }
+tokio = { version = "1.38", features = ["rt-multi-thread", "macros"] }
+thiserror = "1.0.61"
+derive_more = { version = "1.0.0-beta", features = ["from", "display"] }
