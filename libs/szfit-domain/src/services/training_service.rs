@@ -15,7 +15,6 @@ pub struct StartTrainingArgs {
     pub name: Option<String>,
     pub workout_plan_id: Id,
 }
-
 impl StartTrainingArgs {
     pub fn new(user_id: Id, workout_plan_id: Id, name: Option<String>) -> Self {
         Self {
