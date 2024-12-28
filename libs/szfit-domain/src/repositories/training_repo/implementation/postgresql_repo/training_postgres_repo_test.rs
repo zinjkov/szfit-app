@@ -62,7 +62,6 @@ async fn test_list(db: PgPool) {
 }
 
 // async fn update(&self, training_id: Id, tfu: TrainingForUpdate) -> RepoResult<Training>;
-
 #[sqlx::test(migrator = "MIGRATOR", fixtures(path = "fixtures", scripts("test_list")))]
 async fn test_update(db: PgPool) {
     let repo = prepare_test(db);

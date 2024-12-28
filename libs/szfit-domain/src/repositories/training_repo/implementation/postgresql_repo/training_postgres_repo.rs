@@ -8,7 +8,7 @@ use sqlx::postgres::PgRow;
 use sqlx::{Execute, QueryBuilder, Row};
 
 #[component]
-pub(crate) struct PostgresqlTrainingRepository {
+pub struct PostgresqlTrainingRepository {
     db: store::Db,
 }
 

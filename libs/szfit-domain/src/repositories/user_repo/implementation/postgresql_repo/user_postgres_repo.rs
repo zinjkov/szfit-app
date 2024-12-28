@@ -5,12 +5,12 @@ use crate::store;
 use dill::component;
 
 #[component]
-pub(crate) struct PostgresqlUserRepo {
+pub struct PostgresqlUserRepo {
     db: store::Db,
 }
 
 impl PostgresqlUserRepo {
-    pub(crate) fn new(db: store::Db) -> Self {
+    pub fn new(db: store::Db) -> Self {
         Self {
             db
         }
