@@ -64,7 +64,7 @@ pub fn configure_catalog() -> CatalogBuilder {
         services::jwt_authenticator::IJwtAuthenticator);
 
     // Training
-    add_to!(b, services::TrainingService);
+    services::training_service::register_in_catalog(&mut b);
     repositories::training_repo::register_in_catalog(&mut b);
 
     b

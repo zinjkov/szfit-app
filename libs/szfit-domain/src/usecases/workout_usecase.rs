@@ -4,13 +4,13 @@ use std::sync::Arc;
 use crate::aggregate::Sets;
 use crate::entity::{Id, Training};
 use crate::repositories::{ISetsRepository, SetsForCreate};
-use crate::services::{StartTrainingArgs, TrainingService};
+use crate::services::{ITrainingService, StartTrainingArgs};
 
 
 pub struct WorkoutUsecase {
     training: Box<Training>,
     sets_repository: Arc<dyn ISetsRepository>,
-    training_service: Arc<TrainingService>,
+    training_service: Arc<dyn ITrainingService>,
     exercise_in_progress: Option<Id>,
     has_sets: BTreeSet<Id>
 }
@@ -20,7 +20,7 @@ impl WorkoutUsecase {
         user_id: Id,
         workout_plan_id: Id,
         sets_repository: Arc<dyn ISetsRepository>,
-        training_service: Arc<TrainingService>) -> Option<Self> {
+        training_service: Arc<dyn ITrainingService>) -> Option<Self> {
         let training = training_service
             .start_training(
                 StartTrainingArgs::new(user_id, workout_plan_id, None)
