@@ -11,17 +11,10 @@ pub mod store;
 pub mod usecases;
 mod jwt_auth;
 
-macro_rules! add_to {
-    ($x:expr, $t:ty) => {{
-        $x.add::<$t>();
-    }};
-}
 
 
 pub fn configure_catalog() -> CatalogBuilder {
     let mut b = CatalogBuilder::new();
-
-
 
     // Workout Plan
     services::workout_plan_service::register_in_catalog(&mut b);
@@ -29,8 +22,7 @@ pub fn configure_catalog() -> CatalogBuilder {
 
     // Auth
     repositories::user_repo::register_in_catalog(&mut b);
-
-    add_to!(b, services::AuthService);
+    services::auth_service::register_in_catalog(&mut b);
 
     //Workout
     services::workout_list_service::register_in_catalog(&mut b);

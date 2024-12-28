@@ -38,9 +38,9 @@ pub async fn auth(catalog: &Catalog, chat_id: ChatId, user_dialog: &UserDialogue
     let mut user_state = user_dialog.get().await?.ok_or(HandlerError::EmptyUserState)?;
     if user_state.user.is_none() {
         let user = {
-            let service = catalog.get_one::<services::AuthService>()?;
+            let service = catalog.get_one::<dyn services::IAuthService>()?;
             service
-                .user_or_create(chat_id.0.into())
+                .auth_or_create(chat_id.0.into())
                 .await?
         };
         user_state.user = Some(user.clone());

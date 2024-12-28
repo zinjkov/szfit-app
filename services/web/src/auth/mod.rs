@@ -35,9 +35,9 @@ impl From<Tokens> for TokensDto {
 pub async fn telegram_auth(State(catalog): State<Catalog>, Json(telegram_auth): Json<TelegramAuth>)
                        -> JsonResult<TokensDto>  {
     log::info!("telegram_auth {}", telegram_auth.telegram_id);
-    let auth_service = catalog.get_one::<services::AuthService>()?;
+    let auth_service = catalog.get_one::<dyn services::IAuthService>()?;
     let id: i64 = telegram_auth.telegram_id.parse().map_err(|_| AuthError::WrongCredentials)?;
-    let user = auth_service.user_or_create(id.into()).await?;
+    let user = auth_service.auth_or_create(id.into()).await?;
     let auth_service = catalog.get_one::<dyn services::IJwtService>()?;
     let tokens = auth_service.create_tokens(user).await?;
     Ok((StatusCode::OK, Json(TokensDto::from(tokens))))
