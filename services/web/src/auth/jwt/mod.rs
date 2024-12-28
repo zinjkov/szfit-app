@@ -9,8 +9,8 @@ use axum_extra::TypedHeader;
 use dill::Catalog;
 use serde_json::json;
 use std::ops::Deref;
-use szfit_domain::services::jwt_authenticator::IJwtAuthenticator;
-use szfit_domain::services::AuthClaims;
+use szfit_domain::services::jwt_service::{AuthClaims, IJwtAuthenticator};
+
 pub struct ExctractAuthClaims(pub AuthClaims);
 
 impl Deref for ExctractAuthClaims {

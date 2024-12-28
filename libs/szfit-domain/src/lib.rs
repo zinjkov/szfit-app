@@ -1,9 +1,6 @@
 extern crate core;
 
-use crate::jwt_auth::JwtSecret;
 use crate::repositories::workout_plan_repo;
-use crate::services::{AccessTokenExpTime, RefreshTokenExpTime};
-use chrono::Duration;
 use dill::CatalogBuilder;
 
 pub mod aggregate;
@@ -20,24 +17,13 @@ macro_rules! add_to {
     }};
 }
 
-macro_rules! add_to_with_bind {
-    ($x:expr, $t:ty, $d:path) => {{
-        $x.add::<$t>()
-        .bind::<dyn $d, $t>();
-    }};
-}
-
 
 pub fn configure_catalog() -> CatalogBuilder {
     let mut b = CatalogBuilder::new();
 
 
-    b.add_value(JwtSecret(String::from("secret")));
-    b.add_value(AccessTokenExpTime(Duration::days(30)));
-    b.add_value(RefreshTokenExpTime(Duration::days(120)));
 
     // Workout Plan
-
     services::workout_plan_service::register_in_catalog(&mut b);
     workout_plan_repo::register_in_catalog(&mut b);
 
@@ -55,13 +41,8 @@ pub fn configure_catalog() -> CatalogBuilder {
     // Sets
     repositories::sets_repo::register_in_catalog(&mut b);
 
-    // Jwt
-    add_to!(b, services::JwtService);
-
-    // JwtAuthenticator
-    add_to_with_bind!(b,
-        services::jwt_authenticator::JwtAuthenticator,
-        services::jwt_authenticator::IJwtAuthenticator);
+    // JWT
+    services::jwt_service::register_in_catalog(&mut b);
 
     // Training
     services::training_service::register_in_catalog(&mut b);
