@@ -6,6 +6,7 @@ mod implementation;
 pub mod workout_plan_repository;
 
 pub fn register_in_catalog(builder: &mut CatalogBuilder) {
-    builder.add::<PostgresqlWorkoutPlanRepo>()
+    builder
+        .add::<PostgresqlWorkoutPlanRepo>()
         .bind::<dyn IWorkoutPlanRepository, PostgresqlWorkoutPlanRepo>();
 }

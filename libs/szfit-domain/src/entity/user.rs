@@ -1,5 +1,5 @@
-use chrono::{NaiveDateTime};
 use crate::entity::Id;
+use chrono::NaiveDateTime;
 
 #[derive(Debug, Clone)]
 pub struct User {
@@ -9,11 +9,15 @@ pub struct User {
 }
 
 impl User {
-    pub fn new(id: Id, telegram_id: Id, created_at: NaiveDateTime) -> Self {
+    pub fn new(
+        id: Id,
+        telegram_id: Id,
+        created_at: NaiveDateTime,
+    ) -> Self {
         Self {
             id,
             telegram_id,
-            created_at
+            created_at,
         }
     }
 }

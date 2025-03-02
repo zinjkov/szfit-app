@@ -1,8 +1,8 @@
-mod user;
-mod workout;
 mod exercise;
 mod sets;
 mod training;
+mod user;
+mod workout;
 
 pub use exercise::*;
 use serde::{Deserialize, Serialize};
@@ -12,9 +12,19 @@ pub use training::*;
 pub use user::*;
 pub use workout::*;
 
-
-#[derive(Clone, Copy, Debug, PartialOrd, Default)]
-#[derive(Eq, Hash, PartialEq, Serialize, Deserialize, Ord)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    PartialOrd,
+    Default,
+    Eq,
+    Hash,
+    PartialEq,
+    Serialize,
+    Deserialize,
+    Ord,
+)]
 #[repr(transparent)]
 pub struct Id(pub i64);
 
@@ -31,4 +41,3 @@ impl Deref for Id {
         &self.0
     }
 }
-

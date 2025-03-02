@@ -1,5 +1,3 @@
-use std::ops::Deref;
-use async_trait::async_trait;
 use crate::aggregate::Tokens;
 use crate::entity::User;
 use crate::jwt_auth::prelude::*;
@@ -7,8 +5,10 @@ use crate::jwt_auth::JwtSecret;
 use crate::services::error::ServiceResult;
 use crate::services::jwt_service::auth_claims::AuthClaims;
 use crate::services::IJwtService;
+use async_trait::async_trait;
 use chrono::Duration;
 use dill::component;
+use std::ops::Deref;
 
 #[component]
 pub struct JwtService {
@@ -61,24 +61,36 @@ impl IJwtService for JwtService {
 }
 
 impl JwtService {
-    pub fn user_claims_from(&self, token: &str) -> ServiceResult<AuthClaims> {
-        let claims: AuthClaims = JwtValidator::new(self.secret.0.as_str()).validate(token)?;
+    pub fn user_claims_from(
+        &self,
+        token: &str,
+    ) -> ServiceResult<AuthClaims> {
+        let claims: AuthClaims =
+            JwtValidator::new(self.secret.0.as_str()).validate(token)?;
         Ok(claims)
     }
 
-    pub fn new_access_token(&self, claims: impl Into<AuthClaims>) -> ServiceResult<String> {
+    pub fn new_access_token(
+        &self,
+        claims: impl Into<AuthClaims>,
+    ) -> ServiceResult<String> {
         self.new_token(claims, *self.access_token_exp_time)
     }
 
-    pub fn new_refresh_token(&self, claims: impl Into<AuthClaims>) -> ServiceResult<String> {
+    pub fn new_refresh_token(
+        &self,
+        claims: impl Into<AuthClaims>,
+    ) -> ServiceResult<String> {
         self.new_token(claims, *self.refresh_token_exp_time)
     }
 
-    pub fn new_token(&self, claims: impl Into<AuthClaims>, expiration: Duration) -> ServiceResult<String> {
+    pub fn new_token(
+        &self,
+        claims: impl Into<AuthClaims>,
+        expiration: Duration,
+    ) -> ServiceResult<String> {
         let claims = claims.into();
-        let token = JwtGenerator::new(
-            self.secret.0.as_str(),
-            expiration)
+        let token = JwtGenerator::new(self.secret.0.as_str(), expiration)
             .generate(claims)?;
         Ok(token)
     }

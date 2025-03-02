@@ -14,16 +14,20 @@ pub struct WorkoutListHandler {}
 
 #[async_trait]
 impl CallbackHandler for WorkoutListHandler {
-    async fn apply(&self, chp: &CallbackHandlerProcessor) -> HandlerResult<TelegramReply> {
+    async fn apply(
+        &self,
+        chp: &CallbackHandlerProcessor,
+    ) -> HandlerResult<TelegramReply> {
         let plan = {
-            let data = chp.callback_query.data
+            let data = chp
+                .callback_query
+                .data
                 .as_ref()
                 .ok_or(HandlerError::EmptyCallbackData)?;
             let workout_id: i64 = serde_json::from_str(data)?;
-            let service: Arc<dyn IWorkoutPlanService> = chp.catalog.get_one()?;
-            service
-                .get_workout_plan(Id(workout_id))
-                .await?
+            let service: Arc<dyn IWorkoutPlanService> =
+                chp.catalog.get_one()?;
+            service.get_workout_plan(Id(workout_id)).await?
         };
 
         let reply = workout_plan_view(plan).into_reply();

@@ -1,26 +1,25 @@
-use axum::extract::State;
-use axum::http::StatusCode;
 use axum::Json;
-use dill::Catalog;
 use serde::{Deserialize, Serialize};
 use szfit_domain::aggregate::Tokens;
 
-use szfit_domain::services;
-use crate::app_response::{JsonResult};
-use crate::auth::jwt::AuthError;
+use crate::{
+    app_response::{IntoJsonResult, JsonResult},
+    auth::telegram_auth_controller::TelegramAuthController,
+};
 
 pub mod jwt;
+mod telegram_auth_controller;
 
 #[derive(Debug, Deserialize)]
 pub struct TelegramAuth {
-    telegram_id: String,
+    telegram_id: i64,
 }
 
 #[derive(Serialize)]
-#[serde(rename="Tokens")]
+#[serde(rename = "Tokens")]
 pub struct TokensDto {
     access_token: String,
-    refresh_token: String
+    refresh_token: String,
 }
 
 impl From<Tokens> for TokensDto {
@@ -32,13 +31,9 @@ impl From<Tokens> for TokensDto {
     }
 }
 
-pub async fn telegram_auth(State(catalog): State<Catalog>, Json(telegram_auth): Json<TelegramAuth>)
-                       -> JsonResult<TokensDto>  {
+pub async fn telegram_auth(
+    controller: TelegramAuthController, Json(telegram_auth): Json<TelegramAuth>,
+) -> JsonResult<TokensDto> {
     log::info!("telegram_auth {}", telegram_auth.telegram_id);
-    let auth_service = catalog.get_one::<dyn services::IAuthService>()?;
-    let id: i64 = telegram_auth.telegram_id.parse().map_err(|_| AuthError::WrongCredentials)?;
-    let user = auth_service.auth_or_create(id.into()).await?;
-    let auth_service = catalog.get_one::<dyn services::IJwtService>()?;
-    let tokens = auth_service.create_tokens(user).await?;
-    Ok((StatusCode::OK, Json(TokensDto::from(tokens))))
+    controller.auth(telegram_auth).await.into_json()
 }

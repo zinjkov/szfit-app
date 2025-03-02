@@ -1,7 +1,6 @@
 use crate::entity::Id;
 
-#[derive(Debug, Clone)]
-#[derive(PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Exercise {
     pub id: Id,
     pub name: String,

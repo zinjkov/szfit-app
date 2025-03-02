@@ -12,10 +12,7 @@ use szfit_domain::usecases::WorkoutUsecase;
 
 use crate::telegram_handlers::error::*;
 
-#[derive(Clone, Default, Debug)]
-#[derive(Eq)]
-#[derive(PartialEq)]
-#[derive(Hash)]
+#[derive(Clone, Default, Debug, Eq, PartialEq, Hash)]
 pub enum Screen {
     #[default]
     Start,
@@ -34,14 +31,18 @@ pub struct UserState {
 
 pub type UserDialogue = Dialogue<UserState, InMemStorage<UserState>>;
 
-pub async fn auth(catalog: &Catalog, chat_id: ChatId, user_dialog: &UserDialogue) -> HandlerResult<User> {
-    let mut user_state = user_dialog.get().await?.ok_or(HandlerError::EmptyUserState)?;
+pub async fn auth(
+    catalog: &Catalog,
+    chat_id: ChatId,
+    user_dialog: &UserDialogue,
+) -> HandlerResult<User> {
+    let mut user_state =
+        user_dialog.get().await?.ok_or(HandlerError::EmptyUserState)?;
     if user_state.user.is_none() {
         let user = {
-            let service = catalog.get_one::<dyn services::IAuthService>()?;
-            service
-                .auth_or_create(chat_id.0.into())
-                .await?
+            let service =
+                catalog.get_one::<dyn services::IAuthService>()?;
+            service.auth_or_create(chat_id.0.into()).await?
         };
         user_state.user = Some(user.clone());
         user_dialog.update(user_state.clone()).await?;

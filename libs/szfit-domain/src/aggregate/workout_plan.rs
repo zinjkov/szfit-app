@@ -4,5 +4,5 @@ use crate::entity::{Exercise, Id};
 pub struct WorkoutPlan {
     pub workout_id: Id,
     pub workout_name: String,
-    pub exercise_list: Vec<Exercise>
+    pub exercise_list: Vec<Exercise>,
 }

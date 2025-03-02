@@ -3,13 +3,13 @@ services:
     container_name: szfit-postgres
     image: postgres:16.4-bullseye
     environment:
-      POSTGRES_DB: "szfit-postgres-test"
+      POSTGRES_DB: "szfit-postgres"
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres-test/:/var/lib/postgresql/data
+      - ./postgres/:/var/lib/postgresql/data
 
 
 #  szfit-app:

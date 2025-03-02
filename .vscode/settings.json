@@ -1,0 +1,7 @@
+{
+    "rust-analyzer.checkOnSave": true,
+    "lldb.showDisassembly": "auto",
+    "lldb.dereferencePointers": true,
+    "lldb.consoleMode": "commands",
+    "lldb.launch.terminal": "integrated",
+}

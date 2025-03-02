@@ -13,13 +13,18 @@ pub struct TelegramAuthService {
 
 impl TelegramAuthService {
     pub fn new(user_repo: Arc<dyn IUserRepository>) -> Self {
-        Self{ user_repo }
+        Self {
+            user_repo,
+        }
     }
 }
 
 #[async_trait]
 impl IAuthService for TelegramAuthService {
-    async fn auth_or_create(&self, telegram_id: Id) -> ServiceResult<User> {
+    async fn auth_or_create(
+        &self,
+        telegram_id: Id,
+    ) -> ServiceResult<User> {
         Ok(self.user_repo.find_by_tg_or_create(telegram_id).await?)
     }
 

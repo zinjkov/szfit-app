@@ -18,7 +18,10 @@ impl JwtValidator {
         }
     }
 
-    pub fn validate<UserClaims: DeserializeOwned>(&self, token: &str) -> JwtAuthResult<UserClaims> {
+    pub fn validate<UserClaims: DeserializeOwned>(
+        &self,
+        token: &str,
+    ) -> JwtAuthResult<UserClaims> {
         self.coder.decode(token)
     }
 }

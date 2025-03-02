@@ -30,8 +30,12 @@ pub enum AuthError {
 impl IntoResponse for AuthError {
     fn into_response(self) -> axum::response::Response {
         let (status, error_message) = match self {
-            AuthError::WrongCredentials => (StatusCode::UNAUTHORIZED, "Wrong credentials"),
-            AuthError::InvalidToken => (StatusCode::UNAUTHORIZED, "Invalid Token"),
+            AuthError::WrongCredentials => {
+                (StatusCode::UNAUTHORIZED, "Wrong credentials")
+            }
+            AuthError::InvalidToken => {
+                (StatusCode::UNAUTHORIZED, "Invalid Token")
+            }
         };
         let body = Json(json!({
             "error": error_message,
@@ -48,15 +52,20 @@ where
 {
     type Rejection = AuthError;
 
-    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
-        let TypedHeader(Authorization(bearer)) =
-            parts.extract::<TypedHeader<Authorization<Bearer>>>()
+    async fn from_request_parts(
+        parts: &mut Parts,
+        state: &S,
+    ) -> Result<Self, Self::Rejection> {
+        let TypedHeader(Authorization(bearer)) = parts
+            .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
             .map_err(|_| AuthError::InvalidToken)?;
 
         let catalog = Catalog::from_ref(state);
-        let authenticator = catalog.get_one::<dyn IJwtAuthenticator>().unwrap();
-        let auth_claims = authenticator.authenticate(bearer.token()).unwrap();
+        let authenticator =
+            catalog.get_one::<dyn IJwtAuthenticator>().unwrap();
+        let auth_claims =
+            authenticator.authenticate(bearer.token()).unwrap();
         Ok(ExctractAuthClaims(auth_claims))
     }
 }

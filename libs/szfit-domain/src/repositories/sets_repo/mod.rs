@@ -6,6 +6,7 @@ mod implementation;
 pub mod sets_repository;
 
 pub fn register_in_catalog(builder: &mut CatalogBuilder) {
-    builder.add::<PostgresqlSetsRepository>()
+    builder
+        .add::<PostgresqlSetsRepository>()
         .bind::<dyn ISetsRepository, PostgresqlSetsRepository>();
 }

@@ -10,17 +10,19 @@ pub struct JwtAuthenticator {
     secret: JwtSecret,
 }
 
+#[cfg(test)]
 impl JwtAuthenticator {
     pub fn new(secret: JwtSecret) -> JwtAuthenticator {
         Self {
-            secret
+            secret,
         }
     }
 }
 
 impl IJwtAuthenticator for JwtAuthenticator {
     fn authenticate(&self, token: &str) -> ServiceResult<AuthClaims> {
-        let claims: Claims<AuthClaims> = JwtValidator::new(self.secret.as_str()).validate(token)?;
+        let claims: Claims<AuthClaims> =
+            JwtValidator::new(self.secret.as_str()).validate(token)?;
         Ok(claims.user_claims)
     }
 }

@@ -8,7 +8,9 @@ pub struct ExerciseViewModel {
     pub checked: bool,
 }
 
-pub fn workout_progress_view(exercise_list: Vec<ExerciseViewModel>) -> (String, InlineKeyboardMarkup) {
+pub fn workout_progress_view(
+    exercise_list: Vec<ExerciseViewModel>,
+) -> (String, InlineKeyboardMarkup) {
     let mut keyboard: Vec<Vec<InlineKeyboardButton>> = vec![];
     let text = "Список ураженений для тренировки: \n".to_string();
 
@@ -18,17 +20,17 @@ pub fn workout_progress_view(exercise_list: Vec<ExerciseViewModel>) -> (String, 
         } else {
             exercise.name
         };
-        let callback =
-            InlineKeyboardButton::callback(
-                text,
-                serde_json::to_string(&exercise.id.0).unwrap());
+        let callback = InlineKeyboardButton::callback(
+            text,
+            serde_json::to_string(&exercise.id.0).unwrap(),
+        );
         keyboard.push(vec![callback]);
     }
 
-    let callback =
-        InlineKeyboardButton::callback(
-            "Закончить тренировку",
-            "stop_workout");
+    let callback = InlineKeyboardButton::callback(
+        "Закончить тренировку",
+        "stop_workout",
+    );
 
     keyboard.push(vec![callback]);
 

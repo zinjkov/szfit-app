@@ -4,7 +4,7 @@ use teloxide::RequestError;
 pub enum SenderError {
     SendRequestError(#[from] RequestError),
     #[default]
-    Other
+    Other,
 }
 
 pub type SenderResult<T> = std::result::Result<T, SenderError>;

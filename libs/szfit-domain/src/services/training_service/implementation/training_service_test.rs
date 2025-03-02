@@ -1,6 +1,8 @@
 use crate::entity::{Id, Training};
 use crate::repositories::error::RepoResult;
-use crate::repositories::{ITrainingRepository, TrainingForCreate, TrainingForUpdate};
+use crate::repositories::{
+    ITrainingRepository, TrainingForCreate, TrainingForUpdate,
+};
 use crate::services::training_service::implementation::training_service::TrainingService;
 use crate::services::{ITrainingService, StartTrainingArgs};
 use async_trait::async_trait;
@@ -20,33 +22,31 @@ mock! {
 }
 
 fn prepare_service(mock: MockTrainingRepo) -> impl ITrainingService {
-    TrainingService::new(
-        Arc::new(mock),
-    )
+    TrainingService::new(Arc::new(mock))
 }
 
 //start_training
 #[tokio::test]
 async fn test_start_training() {
     let mut mock = MockTrainingRepo::new();
-    mock.expect_create()
-        .returning(|tfc | {
-            Ok(Training {
-                id: Id(1),
-                name: tfc.name.unwrap_or(Utc::now().to_string()),
-                workout_plan_id: Id(1),
-                user_id: Id(1),
-                created_at: Utc::now().naive_utc(),
-                finished_at: None,
-            })
-        });
+    mock.expect_create().returning(|tfc| {
+        Ok(Training {
+            id: Id(1),
+            name: tfc.name.unwrap_or(Utc::now().to_string()),
+            workout_plan_id: Id(1),
+            user_id: Id(1),
+            created_at: Utc::now().naive_utc(),
+            finished_at: None,
+        })
+    });
 
     let service = prepare_service(mock);
-    let res = service.start_training(StartTrainingArgs {
-        user_id: Id(1),
-        name: Some("training 1".to_string()),
-        workout_plan_id: Id(1),
-    })
+    let res = service
+        .start_training(StartTrainingArgs {
+            user_id: Id(1),
+            name: Some("training 1".to_string()),
+            workout_plan_id: Id(1),
+        })
         .await
         .expect("could not start training");
 
@@ -60,23 +60,26 @@ async fn test_start_training() {
 #[tokio::test]
 async fn test_finish_training() {
     let mut mock = MockTrainingRepo::new();
-    mock.expect_update()
-        .returning(|id, update_data| {
-            Ok(Training {
-                id: id,
-                name: "training1".to_string(),
-                workout_plan_id: Id(1),
-                user_id: Id(1),
-                created_at: Utc::now().naive_utc(),
-                finished_at: update_data.finished_at,
-            })
-        });
+    mock.expect_update().returning(|id, update_data| {
+        Ok(Training {
+            id: id,
+            name: "training1".to_string(),
+            workout_plan_id: Id(1),
+            user_id: Id(1),
+            created_at: Utc::now().naive_utc(),
+            finished_at: update_data.finished_at,
+        })
+    });
 
     let service = prepare_service(mock);
-    let res = service.finish_training(Id(1))
+    let res = service
+        .finish_training(Id(1))
         .await
         .expect("could not finish training");
 
     assert_eq!(res.id, Id(1));
     assert!(res.finished_at.is_some());
 }
+
+#[tokio::test]
+async fn error_test() {}

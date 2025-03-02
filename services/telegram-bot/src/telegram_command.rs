@@ -4,5 +4,5 @@ use teloxide::macros::BotCommands;
 #[command(description = "Commands:", rename_rule = "lowercase")]
 pub enum TelegramCommand {
     Start,
-    WhoAmI
+    WhoAmI,
 }

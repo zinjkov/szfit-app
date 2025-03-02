@@ -29,18 +29,21 @@ mock! {
     }
 }
 
-fn prepare_service(mock: MockMockWorkoutPlanRepository) -> impl IWorkoutPlanService {
+fn prepare_service(
+    mock: MockMockWorkoutPlanRepository,
+) -> impl IWorkoutPlanService {
     WorkoutPlanService::new(Arc::new(mock))
 }
 #[tokio::test]
 async fn test_get_workout_plan() {
     let mut mock = MockMockWorkoutPlanRepository::new();
-    mock.expect_find_by_id()
-        .returning(|id| Ok(WorkoutPlan {
+    mock.expect_find_by_id().returning(|id| {
+        Ok(WorkoutPlan {
             workout_id: id,
             workout_name: "test 1".to_string(),
             exercise_list: vec![],
-        }));
+        })
+    });
 
     let service = prepare_service(mock);
     let res = service.get_workout_plan(Id(1)).await.unwrap();
@@ -53,22 +56,21 @@ async fn test_get_workout_plan() {
 #[tokio::test]
 async fn test_set_exercises() {
     let mut mock = MockMockWorkoutPlanRepository::new();
-    mock.expect_add_exercises()
-        .returning(|id, ex_ids|
-            Ok(WorkoutPlan {
-                workout_id: id,
-                workout_name: "test 1".to_string(),
-                exercise_list: ex_ids
-                    .into_iter()
-                    .map(|ex_id| Exercise::new(ex_id, format!("exercise {}", *ex_id)))
-                    .collect(),
-            })
-        );
+    mock.expect_add_exercises().returning(|id, ex_ids| {
+        Ok(WorkoutPlan {
+            workout_id: id,
+            workout_name: "test 1".to_string(),
+            exercise_list: ex_ids
+                .into_iter()
+                .map(|ex_id| {
+                    Exercise::new(ex_id, format!("exercise {}", *ex_id))
+                })
+                .collect(),
+        })
+    });
 
     let service = prepare_service(mock);
-    let res = service.set_exercises(Id(1), vec![Id(1)])
-        .await
-        .unwrap();
+    let res = service.set_exercises(Id(1), vec![Id(1)]).await.unwrap();
 
     assert_eq!(res.workout_id, Id(1));
     assert_eq!(res.workout_name, "test 1");

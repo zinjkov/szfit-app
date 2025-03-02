@@ -3,14 +3,17 @@ use crate::repositories::TrainingForCreate;
 use crate::services::error::ServiceResult;
 use async_trait::async_trait;
 
-
 pub struct StartTrainingArgs {
     pub user_id: Id,
     pub name: Option<String>,
     pub workout_plan_id: Id,
 }
 impl StartTrainingArgs {
-    pub fn new(user_id: Id, workout_plan_id: Id, name: Option<String>) -> Self {
+    pub fn new(
+        user_id: Id,
+        workout_plan_id: Id,
+        name: Option<String>,
+    ) -> Self {
         Self {
             user_id,
             name,
@@ -30,6 +33,12 @@ impl Into<TrainingForCreate> for StartTrainingArgs {
 
 #[async_trait]
 pub trait ITrainingService: Send + Sync {
-    async fn start_training(&self, sta: StartTrainingArgs) -> ServiceResult<Training>;
-    async fn finish_training(&self, training_id: Id) -> ServiceResult<Training>;
+    async fn start_training(
+        &self,
+        sta: StartTrainingArgs,
+    ) -> ServiceResult<Training>;
+    async fn finish_training(
+        &self,
+        training_id: Id,
+    ) -> ServiceResult<Training>;
 }

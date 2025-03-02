@@ -1,12 +1,11 @@
 use std::ops::Deref;
 
-mod jwt_service;
+pub mod claims;
 pub mod error;
 mod jwt_coder;
-pub mod claims;
 pub mod jwt_generator;
+mod jwt_service;
 pub mod jwt_validator;
-
 
 #[derive(Clone)]
 pub struct JwtSecret(pub String);

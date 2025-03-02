@@ -6,6 +6,7 @@ mod implementation;
 pub mod training_repository;
 
 pub fn register_in_catalog(builder: &mut CatalogBuilder) {
-    builder.add::<PostgresqlTrainingRepository>()
+    builder
+        .add::<PostgresqlTrainingRepository>()
         .bind::<dyn ITrainingRepository, PostgresqlTrainingRepository>();
 }

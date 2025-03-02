@@ -1,6 +1,7 @@
 use crate::entity::Id;
 use chrono::NaiveDateTime;
 
+#[derive(Clone, Debug, PartialEq)]
 pub struct Sets {
     pub id: Id,
     pub weight_kg: f64,

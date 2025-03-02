@@ -1,11 +1,15 @@
-mod exercise_handlers;
+mod controllers;
+mod exercise_dto;
+mod handlers;
 
-use axum::routing::{get, post};
-use axum::Router;
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use dill::Catalog;
 
 pub fn router() -> Router<Catalog> {
     Router::new()
-        .route("/exercise", get(exercise_handlers::exercise_list))
-        .route("/exercise", post(exercise_handlers::create_exercise))
+        .route("/exercise", get(handlers::exercise_list))
+        .route("/exercise", post(handlers::create_exercise))
 }

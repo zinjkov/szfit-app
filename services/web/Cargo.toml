@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 #homebrew craft
 szfit-domain = { path = "../../libs/szfit-domain" }
+szfit-macro = { path = "../../libs/szfit-macro" }
 
 axum = { version = "0.7" }
 axum-extra = { version = "0.9", features = ["typed-header"] }
@@ -14,7 +15,7 @@ serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.0", features = ["full"] }
 tower = { version = "0.4", features = ["util", "timeout"] }
 tower-http = { version = "0.5.0", features = ["add-extension", "trace"] }
-log = {version = "0.4.21"}
+log = { version = "0.4.21" }
 
 #di
 dill = { version = "0.8.0" }
@@ -25,3 +26,4 @@ thiserror = "1.0.61"
 
 utoipa = { features = ["axum_extras"], version = "4.2.3" }
 utoipa-swagger-ui = { features = ["axum"], version = "7.1.0" }
+mockall = "0.13.1"

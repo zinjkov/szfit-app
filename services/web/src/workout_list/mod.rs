@@ -1,23 +1,31 @@
-mod workout_list;
+mod controllers;
+mod handlers;
+mod workout_dto;
 
-use axum::routing::{delete, get, post, put};
-use axum::Router;
+use axum::{
+    routing::{delete, get, post, put},
+    Router,
+};
 use dill::Catalog;
 use utoipa::OpenApi;
 
-
 pub fn router() -> Router<Catalog> {
     Router::new()
-        .route("/workout", get(workout_list::workout_list))
-        .route("/workout", post(workout_list::create_workout))
-        .route("/workout", delete(workout_list::delete_workout))
-        .route("/workout", put(workout_list::update_workout))
+        .route("/workout", get(handlers::workout_list))
+        .route("/workout", post(handlers::create_workout))
+        .route("/workout", delete(handlers::delete_workout))
+        .route("/workout", put(handlers::update_workout))
 }
 
-use workout_list::*;
+use workout_dto::*;
 #[derive(OpenApi)]
 #[openapi(
-    paths(workout_list, create_workout, delete_workout, update_workout),
+    paths(
+        handlers::workout_list,
+        handlers::create_workout,
+        handlers::delete_workout,
+        handlers::update_workout
+    ),
     components(schemas(WorkoutForUpdate, WorkoutDto))
 )]
 pub struct ApiDocWorkout;

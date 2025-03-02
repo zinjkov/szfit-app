@@ -35,27 +35,33 @@ impl WorkoutPlanCallbackData {
     }
 }
 
-pub fn workout_plan_view(workout_plan: WorkoutPlan) -> (String, InlineKeyboardMarkup) {
+pub fn workout_plan_view(
+    workout_plan: WorkoutPlan,
+) -> (String, InlineKeyboardMarkup) {
     let mut keyboard: Vec<Vec<InlineKeyboardButton>> = vec![];
-    let mut text = format!("Список ураженений для тренировки {}: \n", capitalize(workout_plan.workout_name));
+    let mut text = format!(
+        "Список ураженений для тренировки {}: \n",
+        capitalize(workout_plan.workout_name)
+    );
 
-    workout_plan.exercise_list.into_iter()
-        .for_each(|ex| {
-            use fmt::Write;
-            let _ = write!(text, "- {}\n", capitalize(ex.name));
-        });
+    workout_plan.exercise_list.into_iter().for_each(|ex| {
+        use fmt::Write;
+        let _ = write!(text, "- {}\n", capitalize(ex.name));
+    });
 
     keyboard.push(vec![
         InlineKeyboardButton::callback(
             "Начать",
-            serde_json::to_string(
-                &WorkoutPlanCallbackData::start(workout_plan.workout_id)
-            ).unwrap()),
+            serde_json::to_string(&WorkoutPlanCallbackData::start(
+                workout_plan.workout_id,
+            ))
+            .unwrap(),
+        ),
         InlineKeyboardButton::callback(
             "Назад",
-            serde_json::to_string(
-                &WorkoutPlanCallbackData::back()
-            ).unwrap()),
+            serde_json::to_string(&WorkoutPlanCallbackData::back())
+                .unwrap(),
+        ),
     ]);
 
     (text, InlineKeyboardMarkup::new(keyboard))

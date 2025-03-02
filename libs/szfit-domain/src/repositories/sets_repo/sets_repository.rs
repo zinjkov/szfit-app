@@ -2,7 +2,7 @@ use crate::entity::{Id, Sets};
 use crate::repositories::error::RepoResult;
 use std::fmt::Debug;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct SetsForCreate {
     pub weight_kg: f32,
     pub reps: i64,
@@ -14,5 +14,9 @@ pub struct SetsForCreate {
 #[async_trait::async_trait]
 pub trait ISetsRepository: Send + Sync {
     async fn create(&self, sets: Vec<SetsForCreate>) -> RepoResult<()>;
-    async fn last_max_set(&self, user_id: Id, exercise_id: Id) -> RepoResult<Sets>;
+    async fn last_max_set(
+        &self,
+        user_id: Id,
+        exercise_id: Id,
+    ) -> RepoResult<Sets>;
 }

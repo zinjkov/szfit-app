@@ -6,6 +6,7 @@ mod implementation;
 pub mod user_repository;
 
 pub fn register_in_catalog(builder: &mut CatalogBuilder) {
-    builder.add::<PostgresqlUserRepo>()
+    builder
+        .add::<PostgresqlUserRepo>()
         .bind::<dyn IUserRepository, PostgresqlUserRepo>();
 }

@@ -1,16 +1,20 @@
-use crate::repositories::user_repo::implementation::postgresql_repo::user_postgres_repo::PostgresqlUserRepo;
-use sqlx::PgPool;
 use crate::entity::Id;
+use crate::repositories::user_repo::implementation::postgresql_repo::user_postgres_repo::PostgresqlUserRepo;
 use crate::repositories::IUserRepository;
+use sqlx::PgPool;
 
-pub static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!("../../migrations");
+pub static MIGRATOR: sqlx::migrate::Migrator =
+    sqlx::migrate!("../../migrations");
 
 fn prepare_test(db: PgPool) -> impl IUserRepository {
     PostgresqlUserRepo::new(db)
 }
 
 // async fn find_by_tg(&self, telegram_id: Id) -> RepoResult<User>;,
-#[sqlx::test(migrator = "MIGRATOR", fixtures(path = "fixtures", scripts("test_find")))]
+#[sqlx::test(
+    migrator = "MIGRATOR",
+    fixtures(path = "fixtures", scripts("test_find"))
+)]
 async fn test_find_by_tg(db: PgPool) {
     let repo = prepare_test(db);
 
@@ -20,7 +24,10 @@ async fn test_find_by_tg(db: PgPool) {
 }
 
 // async fn find_by_id(&self, id: Id) -> RepoResult<User>;
-#[sqlx::test(migrator = "MIGRATOR", fixtures(path = "fixtures", scripts("test_find")))]
+#[sqlx::test(
+    migrator = "MIGRATOR",
+    fixtures(path = "fixtures", scripts("test_find"))
+)]
 async fn test_find_by_id(db: PgPool) {
     let repo = prepare_test(db);
 
@@ -29,11 +36,15 @@ async fn test_find_by_id(db: PgPool) {
     assert_eq!(*user.id, 1);
 }
 // async fn find_by_tg_or_create(&self, telegram_id: Id) -> RepoResult<User>;
-#[sqlx::test(migrator = "MIGRATOR", fixtures(path = "fixtures", scripts("test_find")))]
+#[sqlx::test(
+    migrator = "MIGRATOR",
+    fixtures(path = "fixtures", scripts("test_find"))
+)]
 async fn test_find_by_tg_or_create_with_exist_user(db: PgPool) {
     let repo = prepare_test(db);
 
-    let user = repo.find_by_tg_or_create(Id(11)).await.expect("user not found");
+    let user =
+        repo.find_by_tg_or_create(Id(11)).await.expect("user not found");
     assert_eq!(*user.telegram_id, 11);
     assert_eq!(*user.id, 1);
 }
@@ -42,7 +53,8 @@ async fn test_find_by_tg_or_create_with_exist_user(db: PgPool) {
 async fn test_find_by_tg_or_create_with_create(db: PgPool) {
     let repo = prepare_test(db);
 
-    let user = repo.find_by_tg_or_create(Id(11)).await.expect("user not created");
+    let user =
+        repo.find_by_tg_or_create(Id(11)).await.expect("user not created");
     assert_eq!(*user.telegram_id, 11);
     assert_eq!(*user.id, 1);
 }

@@ -5,13 +5,11 @@ use dill::CatalogBuilder;
 
 pub mod aggregate;
 pub mod entity;
+mod jwt_auth;
 pub mod repositories;
 pub mod services;
 pub mod store;
 pub mod usecases;
-mod jwt_auth;
-
-
 
 pub fn configure_catalog() -> CatalogBuilder {
     let mut b = CatalogBuilder::new();
@@ -42,4 +40,3 @@ pub fn configure_catalog() -> CatalogBuilder {
 
     b
 }
-

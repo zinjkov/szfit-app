@@ -2,10 +2,11 @@ use crate::repositories::exercise_repo::implementation::postgresql_repo::exercis
 use crate::repositories::IExerciseRepository;
 use dill::CatalogBuilder;
 
-mod implementation;
 pub mod exercise_repository;
+mod implementation;
 
 pub fn register_in_catalog(builder: &mut CatalogBuilder) {
-    builder.add::<PostgresqlExerciseRepository>()
+    builder
+        .add::<PostgresqlExerciseRepository>()
         .bind::<dyn IExerciseRepository, PostgresqlExerciseRepository>();
 }

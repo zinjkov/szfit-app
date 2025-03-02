@@ -9,7 +9,7 @@ pub struct AuthClaims {
 impl From<&User> for AuthClaims {
     fn from(value: &User) -> Self {
         Self {
-            user_id: value.id
+            user_id: value.id,
         }
     }
 }
