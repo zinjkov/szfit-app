@@ -1,8 +1,12 @@
-use crate::aggregate::WorkoutPlan;
-use crate::entity::{Exercise, Id, Workout};
-use crate::repositories::error::{RepoResult, RepositoryError};
-use crate::repositories::workout_plan_repo::workout_plan_repository::IWorkoutPlanRepository;
-use crate::store;
+use crate::{
+    aggregate::WorkoutPlan,
+    entity::{Exercise, Id, Workout},
+    repositories::{
+        error::{RepoResult, RepositoryError},
+        workout_plan_repo::workout_plan_repository::IWorkoutPlanRepository,
+    },
+    store,
+};
 use async_trait::async_trait;
 use dill::component;
 use sqlx::{query, QueryBuilder};
@@ -13,10 +17,9 @@ pub struct PostgresqlWorkoutPlanRepo {
 }
 
 impl PostgresqlWorkoutPlanRepo {
+    #[allow(unused)]
     pub fn new(db: store::Db) -> Self {
-        Self {
-            db,
-        }
+        Self { db }
     }
 
     pub fn db(&self) -> &store::Db {
@@ -27,10 +30,7 @@ impl PostgresqlWorkoutPlanRepo {
 #[async_trait]
 impl IWorkoutPlanRepository for PostgresqlWorkoutPlanRepo {
     async fn list_with_limit_offset(
-        &self,
-        user_id: Id,
-        limit: usize,
-        offset: usize,
+        &self, user_id: Id, limit: usize, offset: usize,
     ) -> RepoResult<Vec<Workout>> {
         Ok(sqlx::query_as!(
             Workout,
@@ -48,9 +48,7 @@ impl IWorkoutPlanRepository for PostgresqlWorkoutPlanRepo {
     }
 
     async fn create(
-        &self,
-        user_id: Id,
-        workout_name: String,
+        &self, user_id: Id, workout_name: String,
     ) -> RepoResult<Workout> {
         Ok(sqlx::query_as!(
             Workout,
@@ -65,19 +63,14 @@ impl IWorkoutPlanRepository for PostgresqlWorkoutPlanRepo {
     }
 
     async fn delete(&self, workout_id: Id) -> RepoResult<()> {
-        sqlx::query!(
-            "DELETE FROM workout_plan WHERE id = $1",
-            *workout_id
-        )
-        .execute(self.db())
-        .await?;
+        sqlx::query!("DELETE FROM workout_plan WHERE id = $1", *workout_id)
+            .execute(self.db())
+            .await?;
         Ok(())
     }
 
     async fn update(
-        &self,
-        workout_id: Id,
-        workout_name: String,
+        &self, workout_id: Id, workout_name: String,
     ) -> RepoResult<Workout> {
         Ok(sqlx::query_as!(
             Workout,
@@ -114,18 +107,14 @@ impl IWorkoutPlanRepository for PostgresqlWorkoutPlanRepo {
                 workout_name: row.name,
                 exercise_list: Default::default(),
             });
-            plan.exercise_list.push(Exercise::new(
-                Id(row.exercise_id),
-                row.exercise_name,
-            ));
+            plan.exercise_list
+                .push(Exercise::new(Id(row.exercise_id), row.exercise_name));
         }
         plan_opt.ok_or(RepositoryError::EntityNotFound)
     }
 
     async fn add_exercises(
-        &self,
-        workout_id: Id,
-        exercise_ids: Vec<Id>,
+        &self, workout_id: Id, exercise_ids: Vec<Id>,
     ) -> RepoResult<WorkoutPlan> {
         let mut builder = QueryBuilder::new(
             r#"INSERT INTO workout_to_exercise (workout_plan_id, exercise_id) "#,
@@ -140,8 +129,7 @@ impl IWorkoutPlanRepository for PostgresqlWorkoutPlanRepo {
     }
 
     async fn exercises_for_workout(
-        &self,
-        workout_id: Id,
+        &self, workout_id: Id,
     ) -> RepoResult<Vec<Exercise>> {
         Ok(sqlx::query_as!(
             Exercise,

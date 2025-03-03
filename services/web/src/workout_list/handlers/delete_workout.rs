@@ -8,7 +8,6 @@ use crate::{
 };
 use axum::{http::StatusCode, Json};
 use serde_json::{json, Value};
-use szfit_domain::services::IWorkoutListService;
 
 #[utoipa::path(
     delete,

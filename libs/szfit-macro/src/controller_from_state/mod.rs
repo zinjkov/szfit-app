@@ -3,6 +3,7 @@ use syn::{DeriveInput, Type};
 
 pub fn controller_from_state_impl(ast: DeriveInput) -> TokenStream {
     let ident = ast.ident;
+    #[allow(unused)]
     let ident_name = ident.to_string();
     let fields = match &ast.data {
         syn::Data::Struct(data) => &data.fields,

@@ -1,11 +1,13 @@
-use axum::extract::{FromRef, FromRequestParts};
-use axum::http::request::Parts;
-use axum::http::StatusCode;
-use axum::response::IntoResponse;
-use axum::{Json, RequestPartsExt};
-use axum_extra::headers::authorization::Bearer;
-use axum_extra::headers::Authorization;
-use axum_extra::TypedHeader;
+use axum::{
+    extract::{FromRef, FromRequestParts},
+    http::{request::Parts, StatusCode},
+    response::IntoResponse,
+    Json, RequestPartsExt,
+};
+use axum_extra::{
+    headers::{authorization::Bearer, Authorization},
+    TypedHeader,
+};
 use dill::Catalog;
 use serde_json::json;
 use std::ops::Deref;
@@ -23,6 +25,7 @@ impl Deref for ExctractAuthClaims {
 
 #[derive(thiserror::Error, derive_more::Display, Debug)]
 pub enum AuthError {
+    #[allow(unused)]
     WrongCredentials,
     InvalidToken,
 }
@@ -53,8 +56,7 @@ where
     type Rejection = AuthError;
 
     async fn from_request_parts(
-        parts: &mut Parts,
-        state: &S,
+        parts: &mut Parts, state: &S,
     ) -> Result<Self, Self::Rejection> {
         let TypedHeader(Authorization(bearer)) = parts
             .extract::<TypedHeader<Authorization<Bearer>>>()
@@ -62,10 +64,12 @@ where
             .map_err(|_| AuthError::InvalidToken)?;
 
         let catalog = Catalog::from_ref(state);
-        let authenticator =
-            catalog.get_one::<dyn IJwtAuthenticator>().unwrap();
-        let auth_claims =
-            authenticator.authenticate(bearer.token()).unwrap();
+        let authenticator = catalog
+            .get_one::<dyn IJwtAuthenticator>()
+            .unwrap();
+        let auth_claims = authenticator
+            .authenticate(bearer.token())
+            .unwrap();
         Ok(ExctractAuthClaims(auth_claims))
     }
 }

@@ -1,7 +1,8 @@
-use crate::entity::{Exercise, Id};
-use crate::repositories::error::RepoResult;
-use crate::repositories::{ExerciseForCreate, IExerciseRepository};
-use crate::store;
+use crate::{
+    entity::{Exercise, Id},
+    repositories::{error::RepoResult, ExerciseForCreate, IExerciseRepository},
+    store,
+};
 use dill::component;
 
 #[component]
@@ -10,10 +11,9 @@ pub struct PostgresqlExerciseRepository {
 }
 
 impl PostgresqlExerciseRepository {
+    #[allow(unused)]
     pub fn new(db: store::Db) -> Self {
-        Self {
-            db,
-        }
+        Self { db }
     }
 }
 
@@ -32,9 +32,7 @@ impl IExerciseRepository for PostgresqlExerciseRepository {
     }
 
     async fn list(
-        &self,
-        limit: usize,
-        offset: usize,
+        &self, limit: usize, offset: usize,
     ) -> RepoResult<Vec<Exercise>> {
         Ok(sqlx::query_as!(
             Exercise,
@@ -50,8 +48,7 @@ impl IExerciseRepository for PostgresqlExerciseRepository {
     }
 
     async fn create(
-        &self,
-        exercise_for_insert: ExerciseForCreate,
+        &self, exercise_for_insert: ExerciseForCreate,
     ) -> RepoResult<Exercise> {
         Ok(sqlx::query_as!(
             Exercise,

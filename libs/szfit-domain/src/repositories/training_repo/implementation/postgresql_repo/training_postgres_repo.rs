@@ -1,13 +1,14 @@
-use crate::entity::{Id, Training};
-use crate::repositories::error::{RepoResult, RepositoryError};
-use crate::repositories::{
-    ITrainingRepository, TrainingForCreate, TrainingForUpdate,
+use crate::{
+    entity::{Id, Training},
+    repositories::{
+        error::{RepoResult, RepositoryError},
+        ITrainingRepository, TrainingForCreate, TrainingForUpdate,
+    },
+    store,
 };
-use crate::store;
 use chrono::Utc;
 use dill::component;
-use sqlx::postgres::PgRow;
-use sqlx::{Execute, QueryBuilder, Row};
+use sqlx::{postgres::PgRow, Execute, QueryBuilder, Row};
 
 #[component]
 pub struct PostgresqlTrainingRepository {
@@ -15,20 +16,18 @@ pub struct PostgresqlTrainingRepository {
 }
 
 impl PostgresqlTrainingRepository {
+    #[allow(unused)]
     pub fn new(db: store::Db) -> Self {
-        Self {
-            db,
-        }
+        Self { db }
     }
 }
 
 #[async_trait::async_trait]
 impl ITrainingRepository for PostgresqlTrainingRepository {
-    async fn create(
-        &self,
-        tfc: TrainingForCreate,
-    ) -> RepoResult<Training> {
-        let name = tfc.name.unwrap_or(Utc::now().date_naive().to_string());
+    async fn create(&self, tfc: TrainingForCreate) -> RepoResult<Training> {
+        let name = tfc
+            .name
+            .unwrap_or(Utc::now().date_naive().to_string());
         Ok(sqlx::query_as!(
             Training,
             "INSERT INTO training (name, user_id, workout_plan_id) \
@@ -46,10 +45,7 @@ impl ITrainingRepository for PostgresqlTrainingRepository {
     }
 
     async fn list(
-        &self,
-        user_id: Id,
-        limit: usize,
-        offset: usize,
+        &self, user_id: Id, limit: usize, offset: usize,
     ) -> RepoResult<Vec<Training>> {
         Ok(sqlx::query_as!(
             Training,
@@ -67,9 +63,7 @@ impl ITrainingRepository for PostgresqlTrainingRepository {
     }
 
     async fn update(
-        &self,
-        training_id: Id,
-        tfu: TrainingForUpdate,
+        &self, training_id: Id, tfu: TrainingForUpdate,
     ) -> RepoResult<Training> {
         let mut builder = QueryBuilder::new("UPDATE training SET");
         let mut seporated = builder.separated(",");
@@ -97,12 +91,10 @@ impl ITrainingRepository for PostgresqlTrainingRepository {
         let training = query
             .try_map(|row: PgRow| {
                 let id = row.try_get_unchecked::<i64, _>(0usize)?.into();
-                let name =
-                    row.try_get_unchecked::<String, _>(1usize)?.into();
+                let name = row.try_get_unchecked::<String, _>(1usize)?.into();
                 let workout_plan_id =
                     row.try_get_unchecked::<i64, _>(2usize)?.into();
-                let user_id =
-                    row.try_get_unchecked::<i64, _>(3usize)?.into();
+                let user_id = row.try_get_unchecked::<i64, _>(3usize)?.into();
                 let created_at = row
                     .try_get_unchecked::<chrono::NaiveDateTime, _>(4usize)?
                     .into();

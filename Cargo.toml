@@ -6,3 +6,4 @@ members = [
     "libs/szfit-domain",
     "libs/szfit-db",
     "libs/szfit-utils", "services/web", "libs/szfit-auth", "libs/szfit-macro"]
+resolver = "2"

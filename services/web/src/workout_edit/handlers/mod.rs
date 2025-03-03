@@ -5,9 +5,7 @@ use crate::{
         workout_dto::{SetExerciseWorkout, WorkoutDto},
     },
 };
-use axum::{http::StatusCode, Json};
-
-use szfit_domain::services::IWorkoutPlanService;
+use axum::Json;
 
 pub(super) async fn update_exercise_into_workout(
     workout_controller: WorkoutEditController,

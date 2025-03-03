@@ -7,7 +7,6 @@ use crate::{
     },
 };
 use axum::{response::IntoResponse, Json};
-use szfit_domain::services::IWorkoutListService;
 
 #[utoipa::path(
     post,

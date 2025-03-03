@@ -1,7 +1,8 @@
-use crate::entity::{Id, Training};
-use crate::repositories::{ITrainingRepository, TrainingForUpdate};
-use crate::services::error::ServiceResult;
-use crate::services::{ITrainingService, StartTrainingArgs};
+use crate::{
+    entity::{Id, Training},
+    repositories::{ITrainingRepository, TrainingForUpdate},
+    services::{error::ServiceResult, ITrainingService, StartTrainingArgs},
+};
 use async_trait::async_trait;
 use chrono::Utc;
 use dill::component;
@@ -13,25 +14,22 @@ pub struct TrainingService {
 }
 
 impl TrainingService {
+    #[allow(unused)]
     pub fn new(training_repo: Arc<dyn ITrainingRepository>) -> Self {
-        Self {
-            training_repo,
-        }
+        Self { training_repo }
     }
 }
 
 #[async_trait]
 impl ITrainingService for TrainingService {
     async fn start_training(
-        &self,
-        sta: StartTrainingArgs,
+        &self, sta: StartTrainingArgs,
     ) -> ServiceResult<Training> {
         Ok(self.training_repo.create(sta.into()).await?)
     }
 
     async fn finish_training(
-        &self,
-        training_id: Id,
+        &self, training_id: Id,
     ) -> ServiceResult<Training> {
         Ok(self
             .training_repo

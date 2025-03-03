@@ -1,10 +1,11 @@
-use crate::entity::Exercise;
-use crate::entity::{Id, Sets};
-use crate::repositories::error::RepoResult;
-use crate::repositories::sets_repo::sets_repository::{
-    ISetsRepository, SetsForCreate,
+use crate::{
+    entity::{Id, Sets},
+    repositories::{
+        error::RepoResult,
+        sets_repo::sets_repository::{ISetsRepository, SetsForCreate},
+    },
+    store,
 };
-use crate::store;
 use dill::component;
 use sqlx::QueryBuilder;
 
@@ -14,18 +15,16 @@ pub struct PostgresqlSetsRepository {
 }
 
 impl PostgresqlSetsRepository {
+    #[allow(unused)]
     pub fn new(db: store::Db) -> Self {
-        Self {
-            db,
-        }
+        Self { db }
     }
 }
 
 #[async_trait::async_trait]
 impl ISetsRepository for PostgresqlSetsRepository {
     async fn create(
-        &self,
-        sets_for_insert: Vec<SetsForCreate>,
+        &self, sets_for_insert: Vec<SetsForCreate>,
     ) -> RepoResult<()> {
         let mut builder = QueryBuilder::new(
             "INSERT INTO sets(weight_kg, reps, exercise_id, user_id, training_id)",
@@ -44,9 +43,7 @@ impl ISetsRepository for PostgresqlSetsRepository {
     }
 
     async fn last_max_set(
-        &self,
-        user_id: Id,
-        exercise_id: Id,
+        &self, user_id: Id, exercise_id: Id,
     ) -> RepoResult<Sets> {
         Ok(sqlx::query_as!(
             Sets,

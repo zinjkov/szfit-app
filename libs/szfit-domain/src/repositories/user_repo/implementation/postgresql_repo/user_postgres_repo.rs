@@ -1,7 +1,11 @@
-use crate::entity::{Id, User};
-use crate::repositories::error::{RepoResult, RepositoryError};
-use crate::repositories::IUserRepository;
-use crate::store;
+use crate::{
+    entity::{Id, User},
+    repositories::{
+        error::{RepoResult, RepositoryError},
+        IUserRepository,
+    },
+    store,
+};
 use dill::component;
 
 #[component]
@@ -10,10 +14,9 @@ pub struct PostgresqlUserRepo {
 }
 
 impl PostgresqlUserRepo {
+    #[allow(unused)]
     pub fn new(db: store::Db) -> Self {
-        Self {
-            db,
-        }
+        Self { db }
     }
 }
 
@@ -45,10 +48,7 @@ impl IUserRepository for PostgresqlUserRepo {
         .ok_or(RepositoryError::EntityNotFound)
     }
 
-    async fn find_by_tg_or_create(
-        &self,
-        telegram_id: Id,
-    ) -> RepoResult<User> {
+    async fn find_by_tg_or_create(&self, telegram_id: Id) -> RepoResult<User> {
         let user = self.find_by_tg(telegram_id).await;
         if user.is_err() {
             let user = self.create(telegram_id).await?;
