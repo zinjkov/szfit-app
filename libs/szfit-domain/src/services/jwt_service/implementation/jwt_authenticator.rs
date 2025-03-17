@@ -12,6 +12,7 @@ pub struct JwtAuthenticator {
 
 #[cfg(test)]
 impl JwtAuthenticator {
+    #[allow(unused)]
     pub fn new(secret: JwtSecret) -> JwtAuthenticator {
         Self {
             secret,

@@ -66,10 +66,10 @@ where
         let catalog = Catalog::from_ref(state);
         let authenticator = catalog
             .get_one::<dyn IJwtAuthenticator>()
-            .unwrap();
+            .map_err(|_| AuthError::InvalidToken)?;
         let auth_claims = authenticator
             .authenticate(bearer.token())
-            .unwrap();
+            .map_err(|_| AuthError::InvalidToken)?;
         Ok(ExctractAuthClaims(auth_claims))
     }
 }

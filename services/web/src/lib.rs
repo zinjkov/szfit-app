@@ -13,6 +13,7 @@ use utoipa_swagger_ui::{SwaggerUi, Url};
 mod app_response;
 mod auth;
 mod exercise;
+mod middlewaries;
 mod workout_edit;
 mod workout_list;
 
@@ -22,7 +23,7 @@ pub struct ApiDoc;
 pub async fn serve(db: Db) {
     let mut catalog_builder = configure_catalog();
     catalog_builder.add_value(db.clone());
-
+    let cat = catalog_builder.build();
     // Compose the routes
     let app = Router::new()
         .merge(SwaggerUi::new("/swagger-ui").urls(vec![
@@ -37,10 +38,10 @@ pub async fn serve(db: Db) {
         ]))
         .route("/", get(hello))
         .route("/telegram_auth", post(telegram_auth))
-        .merge(workout_list::router())
+        .merge(workout_list::router(cat.clone()))
         .merge(exercise::router())
         .merge(workout_edit::router())
-        .with_state(catalog_builder.build())
+        .with_state(cat)
         .layer(TraceLayer::new_for_http());
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8081")

@@ -15,10 +15,10 @@ use crate::{
     )
 )]
 pub async fn workout_list(
-    controller: WorkoutController, auth_claims: ExctractAuthClaims,
+    controller: WorkoutController, current_user: ExctractAuthClaims,
 ) -> JsonResult<Vec<WorkoutDto>> {
     controller
-        .list_workout_for_user(auth_claims.user_id)
+        .list_workout_for_user(current_user.user_id)
         .await
         .into_json()
 }
