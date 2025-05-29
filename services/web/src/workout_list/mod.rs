@@ -3,6 +3,7 @@ mod handlers;
 mod workout_dto;
 
 use axum::{
+    middleware::from_fn_with_state,
     routing::{delete, get, post, put},
     Router,
 };
@@ -18,6 +19,7 @@ pub fn router(state: Catalog) -> Router<Catalog> {
         .layer(from_fn_with_state(state, auth_middleware))
 }
 
+use crate::middlewaries::auth::auth_middleware;
 use workout_dto::*;
 
 #[derive(OpenApi)]

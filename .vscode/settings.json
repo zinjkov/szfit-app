@@ -4,4 +4,9 @@
     "lldb.dereferencePointers": true,
     "lldb.consoleMode": "commands",
     "lldb.launch.terminal": "integrated",
+    "editor.formatOnSaveMode": "file",
+    "rust-analyzer.rustfmt.rangeFormatting.enable": true,
+    "github.copilot.chat.terminalChatLocation": "chatView",
+    "gigacode.lookupPriority": true,
+    "gigacode.common.wholeLineReplacement": true,
 }

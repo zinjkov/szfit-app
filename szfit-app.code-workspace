@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"rust-analyzer.checkOnSave": true,
+		"rust-analyzer.rustfmt.rangeFormatting.enable": true,
+		"github.copilot.chat.terminalChatLocation": "chatView",
+		"gigacode.lookupPriority": true,
+		"gigacode.common.wholeLineReplacement": true,
+		"gigacode.inlineHints": false
+	}
+}
